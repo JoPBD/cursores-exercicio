@@ -1,30 +1,38 @@
+-- 1.3 Faça uma pesquisa sobre o anti-pattern chamado RBAR - Row By Agonizing Row.
+-- Explique com suas palavras do que se trata.
+
+-- É uma abordagem ineficiente para processar dados em um banco de dados. 
+-- Difere-se de uma consulta SQL por processar dados linha por linha, 
+-- pode ser muito lento e ineficiente. 
+-- Geralmente é encontrado em código legado.
+
 -- 1.2 Escreva um cursor que exibe todos os nomes dos youtubers em ordem reversa. Para tal
 -- - O SELECT deverá ordenar em ordem não reversa
 -- - O Cursor deverá ser movido para a última tupla
 -- - Os dados deverão ser exibidos de baixo para cima
 
-DO $$
-	DECLARE
-		cur_youtubers_reverse REFCURSOR;
-		tupla RECORD;
-	BEGIN
-		OPEN cur_youtubers_reverse SCROLL FOR
-		SELECT * FROM tb_top_youtubers;
-		LOOP
-			FETCH cur_youtubers_reverse INTO tupla;
-			EXIT WHEN NOT FOUND;
-			IF tupla.youtuber IS NULL THEN
-					DELETE FROM tb_top_youtubers WHERE CURRENT OF cur_youtubers_reverse;
-			END IF;
-		END LOOP;
-		LOOP
-			FETCH BACKWARD FROM cur_youtubers_reverse INTO tupla;
-			EXIT WHEN NOT FOUND;
-			RAISE NOTICE '%', tupla;
-		END LOOP;
-	CLOSE cur_youtubers_reverse;
-END;
-$$
+-- DO $$
+-- 	DECLARE
+-- 		cur_youtubers_reverse REFCURSOR;
+-- 		tupla RECORD;
+-- 	BEGIN
+-- 		OPEN cur_youtubers_reverse SCROLL FOR
+-- 		SELECT * FROM tb_top_youtubers;
+-- 		LOOP
+-- 			FETCH cur_youtubers_reverse INTO tupla;
+-- 			EXIT WHEN NOT FOUND;
+-- 			IF tupla.youtuber IS NULL THEN
+-- 					DELETE FROM tb_top_youtubers WHERE CURRENT OF cur_youtubers_reverse;
+-- 			END IF;
+-- 		END LOOP;
+-- 		LOOP
+-- 			FETCH BACKWARD FROM cur_youtubers_reverse INTO tupla;
+-- 			EXIT WHEN NOT FOUND;
+-- 			RAISE NOTICE '%', tupla;
+-- 		END LOOP;
+-- 	CLOSE cur_youtubers_reverse;
+-- END;
+-- $$
 
 -- 1.1 Escreva um cursor que exiba as variáveis rank e youtuber de toda tupla que tiver
 -- video_count pelo menos igual a 1000 e cuja category seja igual a Sports ou Music.
